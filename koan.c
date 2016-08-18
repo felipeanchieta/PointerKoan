@@ -45,25 +45,29 @@ int main() {
 
 	// Hint remember your processors Endianness
 	// Also you should probably do these as hex
-	assert(*intP == 0x00000000);
+	assert(*intP == 0x03020100); /* NOTE: the problem here was that the integer embraces FOUR char values (0, 1, 2, 3) */
 
 	intP = intP + 3;
-	assert(*intP == 0x00000000);
+	assert(*intP == 0x0F0E0D0C); /* FIXED. Notice that we stepped 3 INTEGER positions, which means 3*4 = 12 char positions */
 
-	intP = (unsigned int *)((unsigned char *) (intP) + 3);
-	assert(*intP == 0x00000000);
+	intP = (unsigned int *)((unsigned char *) (intP) + 3); /* intP -> uchar* then do the 3 pointer steps forward */
+    assert(*intP == 0x1211100F); 
+    
+    /* Explanation to the line 54:  The pointer had an integer reference, which was lost in the cast to unsigned char
+     * We stepped the pointer 3 times, under char point arithmetic, which lead us to the '0x0F' value (see l.51)
+     * Finally, the cast to integer pointer have the propertie to pointing out the value of 4 hex positions */
 
 	unsigned int intX = *intP--;
-	assert(intX == 0x00000000);
-	assert(*intP == 0x00000000);
+	assert(intX == 0x1211100F); /* FIXED: the same as before */
+	assert(*intP == 0x0E0D0C0B); /* You decrement the pointer as integer, then move 4 positions backwards */
 
 	unsigned int *subtractedP = intP - 1;
-	assert(*subtractedP == 0x00000000);
-	assert(intP - subtractedP == 0);
+	assert(*subtractedP == 0x0A090807); /* the same logic as before */
+	assert(intP - subtractedP == 1); /* this difference follows from the subtraction on the l.64 */
 
 	// Obscure C trick
 	intP = (unsigned int*) originalPointer;
-	assert(3[intP] == 0x00000000);
+    assert(3[intP] == 0x0F0E0D0C); /* 3[x] means *(3+x) actually, so this line means *(intP + 3) == anAddress (original intP) */
 
 	puts("Congrats you did it!  You must know your pointers");
 	return 0;
