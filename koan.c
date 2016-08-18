@@ -9,7 +9,7 @@ int main() {
 
 	// Start with operations on an unsigned char - where a char is 1 byte
 	unsigned char originalPointer[256];
-	for(int i = 0; i < 256; i++)
+	for (int i = 0; i < 256; i++)
 		originalPointer[i] = i;
 
 	unsigned char *p = originalPointer;
@@ -18,27 +18,27 @@ int main() {
 	assert(*p == 0);
 
 	p = p + 3;
-	assert(*p == 0);
+	assert(*p == 3); /* FIXED */
 
 	unsigned char a = *p++;
-	assert(a == 0);
-	assert(*p == 0);
+	assert(a == 3); /* FIXED */
+	assert(*p == 4); /* FIXED */
 
 	unsigned char b = *(p++);
-	assert(b == 0);
-	assert(*p == 0);
+	assert(b == 4); /* FIXED */
+	assert(*p == 5); /* FIXED */
 
 	// Would love to deal with the 'endianness' of the memory.
 	// Not sure I can
 	unsigned char c = *++p;
-	assert(c == 0);
-	assert(*p == 0);
+	assert(c == 6); /* FIXED */
+	assert(*p == 6); /* FIXED */
 
 	// Sure you can - cast and display the hex value
 	// but how would you simulate the memory?
 	unsigned char *np = p + 3;
-	assert(*np == 0);
-	assert(*p == 0);
+	assert(*np == 9); /* FIXED */
+	assert(*p == 6); /* FIXED */
 
 	//Let's setup an integer pointer
 	unsigned int *intP = (unsigned int*) originalPointer;
